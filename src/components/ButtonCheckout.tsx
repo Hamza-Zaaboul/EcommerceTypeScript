@@ -1,4 +1,4 @@
-import stripePromise from "@/lib/stripe";
+
 import { ButtonCheckoutProps } from "@/utils/types-zod";
 import React from "react";
 
@@ -8,7 +8,7 @@ const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
 }) => {
   
   const handleAddToCart = async () => {
-    const stripe = await stripePromise;
+
     await fetch("/api/checkout", {
       method: "POST",
       headers: {
