@@ -1,7 +1,9 @@
-
+import { loadStripe } from '@stripe/stripe-js';
 import { ButtonCheckoutProps } from "@/utils/types-zod";
 import React from "react";
-
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as any
+);
 const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
   priceId,
   userEmail,
@@ -9,8 +11,10 @@ const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
 }) => {
   const handleAddToCart = async () => {
     try {
-   await fetch("/api/checkout", {
+    await fetch("/api/checkout", {
         method: "POST",
+        mode: 'cors',
+        redirect: 'follow',
         headers: {
           "Content-Type": "application/json",
         },
