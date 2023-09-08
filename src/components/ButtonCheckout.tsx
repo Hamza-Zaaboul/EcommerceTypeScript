@@ -11,7 +11,6 @@ const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
     try {
    await fetch("/api/checkout", {
         method: "POST",
-        mode: "no-cors",
         headers: {
           "Content-Type": "application/json",
         },
