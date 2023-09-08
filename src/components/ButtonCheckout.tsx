@@ -1,3 +1,4 @@
+
 import { ButtonCheckoutProps } from "@/utils/types-zod";
 import React from "react";
 
@@ -8,7 +9,7 @@ const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
 }) => {
   const handleAddToCart = async () => {
     try {
-     await fetch("/api/checkout", {
+   await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -19,6 +20,12 @@ const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
           routeUrl: routeUrl,
         }),
       });
+      // const sessionId = response.json();
+      // console.log(sessionId);
+      // const stripe : any = await stripePromise;
+      // const { error } = await stripe.redirectToCheckout({
+      //   sessionId,
+      // });
 
     } catch (error : any) {
       console.error("Erreur lors de la requete checkout:", error);
