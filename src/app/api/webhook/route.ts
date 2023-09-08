@@ -1,5 +1,4 @@
 import Stripe from "stripe";
-import { buffer } from "micro";
 import Cors from "micro-cors";
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
@@ -9,11 +8,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as any, {
     apiVersion: "2023-08-16",
 });
 
-export const config = {
-    api: {
-        bodyParser: false,
-    },
-};
+// route.config.ts
+
+  
 
 const cors = Cors({
     allowMethods: ["POST", "HEAD"],
