@@ -64,7 +64,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
       );
     }
   } else {
-    
+   
+      // res.setHeader('Allow', 'POST');
+      // res.status(405).end('Method Not Allowed');
     return NextResponse.next();
   }
 }

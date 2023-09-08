@@ -1,7 +1,6 @@
 import stripePromise from "@/lib/stripe";
 import { ButtonCheckoutProps } from "@/utils/types-zod";
 import React from "react";
-import axios from "axios"; // Importez Axios
 
 const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
   priceId,
@@ -9,28 +8,7 @@ const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
 }) => {
   
   const handleAddToCart = async () => {
-    // try {
-    //   // Effectuez la requête API à "api/checkout" en utilisant Axios
-    //   const response = await axios.post("/api/checkout",{
-    //     priceId: priceId,
-    //     userEmail: userEmail
-    //   });
-
-    //   // Vérifiez le statut de la réponse
-    //   if (response.status !== 200) {
-    //     throw new Error("Erreur de requête API");
-    //   }
-
-    //   // Traitez la réponse de l'API en conséquence
-    //   const data = response.data;
-    //   console.log("Réponse de l'API :", data);
-
-    //   // Vous pouvez également effectuer des actions supplémentaires après avoir reçu la réponse
-    // } catch (error) {
-    //   // Gérez les erreurs de requête ici
-    //   console.error("Erreur de requête API :", error);
-    // }
-
+    const stripe = await stripePromise;
     await fetch("/api/checkout", {
       method: "POST",
       headers: {
