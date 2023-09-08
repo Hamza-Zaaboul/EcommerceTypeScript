@@ -7,12 +7,14 @@ type BodyData = {
   routeUrl: string;
 };
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY as any;
-const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: "2023-08-16", // Remplacez par la version Stripe que vous utilisez
-});
+
+
 
 export async function POST(req: NextRequest, res: NextResponse) {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY as any;
+  const stripe = new Stripe(stripeSecretKey, {
+    apiVersion: "2023-08-16", // Remplacez par la version Stripe que vous utilisez
+  });
   if (!req.body) {
     return NextResponse.json(
       { error: "Le corps de la requête est vide." },
@@ -51,7 +53,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       if (!session.url) {
         throw new Error("Session URL is null.");
       }
-      return NextResponse.redirect(new URL(session.url, req.url));
+      return NextResponse.json({id:session.id});
 
     } catch (error) {
       console.error(

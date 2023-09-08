@@ -1,40 +1,61 @@
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe } from "@stripe/stripe-js";
 import { ButtonCheckoutProps } from "@/utils/types-zod";
+import axios from "axios";
 import React from "react";
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as any
-);
+
+
+const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as any;
+const stripePromise = loadStripe(publishableKey);
+
 const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
   priceId,
   userEmail,
-  routeUrl
+  routeUrl,
 }) => {
+//   const handleAddToCart = async () => {
+//     try {
+//       const response = await fetch("/api/checkout", {
+//         method: "POST",
+//         mode: "cors",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({
+//           priceId: priceId,
+//           userEmail: userEmail,
+//           routeUrl: routeUrl,
+//         }),
+//       }).then(response => response);
+//       const sessionId = response.json();
+// console.log(sessionId);
+//       // const stripe : any = await stripePromise;
+//       // console.log(sessionId);
+//       // const { error } = await stripe.redirectToCheckout({
+//       //   sessionId,
+//       // });
+//     } catch (error: any) {
+//       console.error("Erreur lors de la requete checkout:", error);
+//     }
+//   };
   const handleAddToCart = async () => {
-    try {
-    await fetch("/api/checkout", {
-        method: "POST",
-        mode: 'cors',
-        redirect: 'follow',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          priceId: priceId,
-          userEmail: userEmail,
-          routeUrl: routeUrl,
-        }),
-      });
-      // const sessionId = response.json();
-      // console.log(sessionId);
-      // const stripe : any = await stripePromise;
-      // const { error } = await stripe.redirectToCheckout({
-      //   sessionId,
-      // });
 
-    } catch (error : any) {
-      console.error("Erreur lors de la requete checkout:", error);
+    const checkoutSession = await axios.post('/api/checkout', {
+      priceId: priceId,
+      userEmail: userEmail,
+      routeUrl: routeUrl,
+    });
+    console.log(checkoutSession.data.id);
+    
+    const stripe = await stripePromise as any | null;
+    const sessionId = checkoutSession.data.id;
+    const result = await stripe.redirectToCheckout({
+      sessionId,
+    });
+    if (result.error) {
+      alert(result.error.message);
     }
   };
+
 
   return (
     <button
