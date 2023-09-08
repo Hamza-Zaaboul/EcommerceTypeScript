@@ -20,7 +20,8 @@ const cors = Cors({
 export async function POST(req: NextRequest, res: NextResponse) {
     if (req.method === "POST") {
         const body = await req.text();
-        const sig = headers().get("Stripe-Signature") as string;
+        const sig = headers().get("stripe-signature") as string;
+
         let event;
 
         try {
