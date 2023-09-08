@@ -1,25 +1,28 @@
-
 import { ButtonCheckoutProps } from "@/utils/types-zod";
 import React from "react";
 
 const ButtonCheckout: React.FC<ButtonCheckoutProps> = ({
   priceId,
-  userEmail
+  userEmail,
+  routeUrl
 }) => {
-  
   const handleAddToCart = async () => {
+    try {
+     await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          priceId: priceId,
+          userEmail: userEmail,
+          routeUrl: routeUrl,
+        }),
+      });
 
-    await fetch("/api/checkout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        priceId: priceId,
-        userEmail: userEmail,
-        routeUrl : window.location.href
-      }),
-    })
+    } catch (error : any) {
+      console.error("Erreur lors de la requete checkout:", error);
+    }
   };
 
   return (

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import Stripe from "stripe";
+
 type BodyData = {
-  priceId : string;
-  userEmail : string;
-  routeUrl : string;
-}
+  priceId: string;
+  userEmail: string;
+  routeUrl: string;
+};
+
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY as any;
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: "2023-08-16", // Remplacez par la version Stripe que vous utilisez
@@ -19,19 +20,21 @@ export async function POST(req: NextRequest, res: NextResponse) {
     );
   }
 
-  let data = []
-  for await (const chunk of req.body as any){
-    data.push(...chunk)
+  let data = [];
+  for await (const chunk of req.body as any) {
+    data.push(...chunk);
   }
 
-  const stringData = String.fromCharCode(...data)
-  const body : BodyData = JSON.parse(stringData)
+  const stringData = String.fromCharCode(...data);
+  const body: BodyData = JSON.parse(stringData);
 
   if (req.method === "POST") {
     try {
-      
-      const { priceId, userEmail,routeUrl }:BodyData = body;
+      const { priceId, userEmail, routeUrl }: BodyData = body;
 
+      const customer = await stripe.customers.create({
+        email: userEmail,
+      });
       // Créez une session de paiement Checkout
       const session = await stripe.checkout.sessions.create({
         line_items: [
@@ -40,6 +43,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             quantity: 1,
           },
         ],
+        customer: customer.id,
         mode: "payment",
         success_url: `${routeUrl}/?success=true`,
         cancel_url: `${routeUrl}/?canceled=true`,
@@ -49,7 +53,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       if (!session.url) {
         throw new Error("Session URL is null.");
       }
-      return NextResponse.redirect(new URL("303", session.url));
+      return NextResponse.redirect(new URL(session.url));
+      
     } catch (error) {
       console.error(
         "Erreur lors de la création de la session de paiement :",
@@ -64,9 +69,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       );
     }
   } else {
-   
-      // res.setHeader('Allow', 'POST');
-      // res.status(405).end('Method Not Allowed');
+    // res.setHeader('Allow', 'POST');
+    // res.status(405).end('Method Not Allowed');
     return NextResponse.next();
   }
 }
