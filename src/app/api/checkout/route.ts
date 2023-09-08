@@ -6,7 +6,7 @@ type BodyData = {
   userEmail : string;
   routeUrl : string;
 }
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY as string;
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY as any;
 const stripe = new Stripe(stripeSecretKey, {
   apiVersion: "2023-08-16", // Remplacez par la version Stripe que vous utilisez
 });
