@@ -32,9 +32,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     try {
       const { priceId, userEmail, routeUrl }: BodyData = body;
 
-      const customer = await stripe.customers.create({
-        email: userEmail,
-      });
       // Créez une session de paiement Checkout
       const session = await stripe.checkout.sessions.create({
         line_items: [
@@ -43,18 +40,19 @@ export async function POST(req: NextRequest, res: NextResponse) {
             quantity: 1,
           },
         ],
-        customer: customer.id,
+       
         mode: "payment",
         success_url: `${routeUrl}/?success=true`,
         cancel_url: `${routeUrl}/?canceled=true`,
         customer_email: userEmail,
       });
+      console.log(session.url);
 
       if (!session.url) {
         throw new Error("Session URL is null.");
       }
-      return NextResponse.redirect(new URL(session.url));
-      
+      return NextResponse.redirect(session.url);
+
     } catch (error) {
       console.error(
         "Erreur lors de la création de la session de paiement :",

@@ -171,7 +171,7 @@ export default function Product({ params }: { params: { slug: string } }) {
                 </div>
 
                 <div className="mt-10 flex">
-                  <ButtonCheckout priceId={product[slugNumber].stripeprice} userEmail="hzaaboul@laposte.net" routeUrl="/shop" />
+                  <ButtonCheckout priceId={product[slugNumber].stripeprice} userEmail="hzaaboul@laposte.net" routeUrl="http://localhost:3000/shop/0" />
 
                   <button
                     type="button"
