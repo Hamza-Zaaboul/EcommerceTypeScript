@@ -51,7 +51,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       if (!session.url) {
         throw new Error("Session URL is null.");
       }
-      return NextResponse.redirect(new URL(session.url));
+      return NextResponse.redirect(new URL(session.url, req.url));
 
     } catch (error) {
       console.error(
