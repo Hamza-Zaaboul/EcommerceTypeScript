@@ -1,24 +1,18 @@
 import Stripe from "stripe";
-import Cors from "micro-cors";
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { buffer } from "micro";
+
 
 // Instancier l'API Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as any, {
   apiVersion: "2023-08-16",
 });
 
-// route.config.ts
 
-const cors = Cors({
-  allowMethods: ["POST", "HEAD"],
-});
 
 // Gérer le webhook
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   if (req.method === "POST") {
-    const body = await req.text()
+    const body = await req.text();
     const sig = (req.headers as any).get("stripe-signature");
 
     let event;
@@ -37,7 +31,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         { status: 400 }
       );
     }
-    // || event.type === "checkout.sessi  zon.completed"
+
 
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
