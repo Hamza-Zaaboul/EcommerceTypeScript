@@ -20,7 +20,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method === "POST") {
     const buf = await buffer(req as any);
     const body = buf.toString();
-    const sig = headers().get("stripe-signature") as string;
+    const sig = (req.headers as any).get("stripe-signature");
 
     let event;
 
@@ -79,8 +79,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
       return NextResponse.json({ received: true }, { status: 200 });
     }
   } else {
-    headers().set("Allow", "POST");
-
+    (req.headers as any).set("Allow", "POST");
     return NextResponse.json({ end: "Method Not Allowed" }, { status: 405 });
   }
 }
