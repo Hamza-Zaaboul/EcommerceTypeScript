@@ -18,8 +18,7 @@ const cors = Cors({
 // Gérer le webhook
 export async function POST(req: NextRequest, res: NextResponse) {
   if (req.method === "POST") {
-    const buf = await buffer(req as any);
-    const body = buf.toString();
+    const body = await req.text()
     const sig = (req.headers as any).get("stripe-signature");
 
     let event;
